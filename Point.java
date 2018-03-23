@@ -1,5 +1,8 @@
 import java.util.Comparator;
+
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Point implements Comparable<Point> {
 
@@ -46,16 +49,23 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-    		if ((that.y == this.y) && (that.x != this.x))  {
+    		if (that == null) 
+    			throw new NullPointerException();
+    		
+    		double xdiff = (that.x - this.x);
+    		double ydiff = (that.y - this.y);
+    		
+    		if (xdiff == 0.0 && ydiff == 0.0) {
+			return Double.NEGATIVE_INFINITY;
+		}
+    		if (ydiff == 0.0)  {
     			return 0.0;
     		}
-    		if ((that.x == this.x) && (that.y != this.y)) {
+    		if (xdiff == 0.0) {
     			return Double.POSITIVE_INFINITY;
     		}
-    		if ((that.x == this.x) && (that.y == this.y)) {
-    			return Double.NEGATIVE_INFINITY;
-    		}
-        return (that.y - this.y) / (that.x - this.x);
+    		
+        return (ydiff) / (xdiff);
     }
 
     /**
@@ -71,6 +81,10 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
+    		if (that == null) {
+    			throw new NullPointerException();
+    		}
+    		
     		if ((this.y < that.y) || ((this.y == that.y) && (this.x < that.x))) {
     			return -1;
     		} else if ((this.y == that.y) && (this.x == that.x)) {
@@ -87,10 +101,15 @@ public class Point implements Comparable<Point> {
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
-        return null;
+        return new Comparator<Point>() {
+        		public int compare(Point o1, Point o2) {
+        			double slope1 = slopeTo(o1);
+        			double slope2 = slopeTo(o2);
+        			return Double.compare(slope1, slope2);
+        		}
+        };
     }
-
-
+    
     /**
      * Returns a string representation of this point.
      * This method is provide for debugging;
@@ -106,6 +125,38 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        /* YOUR CODE HERE */
+    	    // read the n points from a file
+        /*In in = new In("input8.txt");
+        int n = in.readInt();*/
+        Point[] points = new Point[4];
+        points[0] = new Point(21784, 21585);
+        points[1] = new Point(25161, 28160);
+        points[2] = new Point(10443, 16989);
+        points[3] = null;
+        /*for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+        }
+        
+       Point p1 = new Point(8, 5);
+        System.out.println(p1.slopeTo(null)); 
+
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();*/
+
+        // print and draw the line segments
+        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
     }
 }

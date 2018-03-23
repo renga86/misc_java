@@ -1,3 +1,4 @@
+import java.util.LinkedHashMap;
 
 public class Reverse {
 	
@@ -101,5 +102,7 @@ public class Reverse {
 		System.out.println(" Printing reverse recursively without global head");
 		rev.reverseRecurHead();
 		rev.print();
+		
+		System.out.println(Integer.valueOf("658") + Integer.valueOf("789"));
 	}
 }
